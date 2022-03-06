@@ -1,3 +1,5 @@
+#database 
+dbData/
 # Django #
 *.log
 *.pot
