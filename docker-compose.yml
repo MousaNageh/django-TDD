@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 services:
   backend:
     build: 
@@ -20,21 +20,21 @@ services:
           python manage.py migrate &&
           python manage.py runserver 0.0.0.0:8000
       "
-    
+    depends_on:
+      - db
     stdin_open: true
     
     tty: true
     
-    depends_on:
-      - db
+    
   db :
     image: postgres:10-alpine
     env_file:
       - ./database.env
     restart: always
     volumes:
-      - ./dbData:/var/lib/postgresql  
+      - dbData:/var/lib/postgresql/data  
   
 
-# volumes:
-#   dbData:
+volumes:
+  dbData:
