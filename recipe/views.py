@@ -5,25 +5,22 @@ from rest_framework.permissions import IsAuthenticated
 from core.models import Tag,Ingredient
 from recipe.serializers import TagSerialzier,IngredientSerialzier
 
-class TagViewSet(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.CreateModelMixin):
+
+class BaseRecipeAttrsView(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.CreateModelMixin):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    queryset = Tag.objects.all()
-    serializer_class = TagSerialzier
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user).order_by("-name")
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-class IngredientViewSet(viewsets.GenericViewSet,mixins.ListModelMixin,mixins.CreateModelMixin):
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+
+class TagViewSet(BaseRecipeAttrsView):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerialzier
+
+class IngredientViewSet(BaseRecipeAttrsView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerialzier
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user).order_by("-name")
-    
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
     

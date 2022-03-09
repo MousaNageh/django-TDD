@@ -44,5 +44,19 @@ class PrivateIngredientTests(TestCase):
         self.assertEqual(res.status_code,status.HTTP_200_OK)
         self.assertEqual(len(res.data),1)
         self.assertEqual(res.data[0]["name"],ingredient.name)
+    
+    def test_create_ingredient_successfully(self):
+        payload = {'name':'Cabbage'}
+        res= self.client.post(INGREDIENT_URL,payload)
+        self.assertEqual(res.status_code,status.HTTP_201_CREATED)
+        self.assertTrue(Ingredient.objects.filter(user_id=self.user.id,name=payload["name"]).exists())
+        self.assertEqual(res.data['name'],payload['name'])
+    
+    def test_create_ingredient_invalid(self):
+        payload = {'name':''}
+        res= self.client.post(INGREDIENT_URL,payload)
+        self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(Ingredient.objects.filter(user=self.user,name=payload["name"]).exists())
+
 
 
