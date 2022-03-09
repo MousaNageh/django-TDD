@@ -50,3 +50,15 @@ class Ingredient(models.Model):
   
   def __str__(self) -> str:
       return self.name
+
+class Recipe(models.Model):
+  user = models.ForeignKey(settings.AUTH_USER_MODEL,related_name="userRecipes",on_delete=models.CASCADE)
+  title = models.CharField(max_length=255)
+  time_minutes = models.IntegerField()
+  price = models.DecimalField(max_digits=5,decimal_places=2)
+  link = models.URLField(blank=True,null=True)
+  ingredients = models.ManyToManyField('Ingredient')
+  tags = models.ManyToManyField('Tag')
+  
+  def __str__(self) -> str:
+      return self.title
