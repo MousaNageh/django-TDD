@@ -36,12 +36,11 @@ class PrivateTagApiTest(TestCase):
         self.assertEqual(res.data,serializer.data)
     
     def test_tags_is_available_for_auth_users(self):
-        user2 = get_user_model().objects.create_user(name="mousa@mouasa.com",password="dsfvcdvhdso")
+        user2 = get_user_model().objects.create_user(email="mousa@mouasa.com",password="dsfvcdvhdso")
         Tag.objects.create(user=user2,name="fruity")
         tag = Tag.objects.create(user=self.user,name="Confort Food")
         res = self.client.get(TAG_URL)
         self.assertEqual(len(res.data),1)
-        print(res.data)
         self.assertEqual(res.status_code,status.HTTP_200_OK)
         self.assertEqual(res.data[0]["name"],tag.name)
     
@@ -63,6 +62,9 @@ class PrivateTagApiTest(TestCase):
         self.assertEqual(res.status_code,status.HTTP_400_BAD_REQUEST)
         exists = Tag.objects.filter(user=self.user,name=payload["name"]).exists()
         self.assertFalse(exists)
+
+    
+
 
 
 
